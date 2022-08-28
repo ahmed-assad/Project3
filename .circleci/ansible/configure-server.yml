@@ -1,4 +1,3 @@
----
 - name: "Install Node.js 13"
   shell: |
     # Install Node.js LTS version as our base Node.js version
