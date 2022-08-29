@@ -296,7 +296,7 @@ jobs:
       - install_awscli
       - install_nodejs
       - restore_cache:
-          keys: [backend-deps]
+          keys: [backend-build]
       - add_ssh_keys:
           fingerprints: ["12:5f:36:d1:ce:ee:b9:0c:40:39:44:e5:ba:76:e4:f8"]
       - attach_workspace:
