@@ -175,6 +175,7 @@ jobs:
       - run:
           name: Ensure backend infrastructure exist
           command: |
+            yum install -y gzip tar
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
             --tags project=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
@@ -217,6 +218,8 @@ jobs:
       - run:
           name: Configure Server
           command: |
+            apk add tar gzip ansible
+            pip3 install awscli
             cd .circleci/ansible
             cat inventory.txt
 
@@ -304,13 +307,16 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+                  apk add --update nodejs npm
+                  apk add curl
                   cd backend
-                  npm install
+                  npm i
+                  npm run build
       - run:
           name: Package Backend
           command: |
                   cd backend
-                  npm run build
+                  # npm run build
                   cd ..
                   tar -C backend -czvf artifact.tar.gz .
                   cp ./artifact.tar.gz  .circleci/ansible/roles/deploy/files
