@@ -308,7 +308,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-                  sudo npm install -g npm@6.0.0
+                  sudo npm install -g npm@6.17.1
                   sudo apt install curl
                   cd backend
                   npm i
