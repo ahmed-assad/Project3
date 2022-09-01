@@ -308,20 +308,21 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-                  sudo npm i
-                  npm audit fix
-                  sudo apt install curl
+                  # sudo npm i
+                  # npm audit fix
+                  # sudo apt install curl
                   cd backend
-                  npm i
-                  npm run build
+                  npm install
+                  # npm run build
       - run:
           name: Package Backend
           command: |
                   cd backend
-                  # npm run build
+                  npm run build
+                  
+                  tar -czf artifact.tar.gz dist/* package*
                   cd ..
-                  tar -C backend -czvf artifact.tar.gz .
-                  cp ./artifact.tar.gz  .circleci/ansible/roles/deploy/files
+                  cp backend/artifact.tar.gz  .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
