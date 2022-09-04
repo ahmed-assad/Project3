@@ -305,7 +305,7 @@ jobs:
           name: Install dependencies
           command: |
             cd backend
-            npm install
+            npm install -g npm@6.2.3
             sudo apt install curl
       - run:
           name: Package Backend
