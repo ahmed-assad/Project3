@@ -289,12 +289,12 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: cimg/python:3.10
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - install_ansible
-      - install_awscli
-      - install_nodejs
+      # - install_ansible
+      # - install_awscli
+      # - install_nodejs
       - restore_cache:
           keys: [backend-build]
       - add_ssh_keys:
@@ -304,6 +304,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update ansible
+            apk add --update nodejs npm
+            apk add curl
+            pip3 install awscli
+      - run:
+          name: Package Backend
+          command: |
             cd backend
             npm i
             npm run build
@@ -311,34 +318,14 @@ jobs:
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             cp ./artifact.tar.gz  .circleci/ansible/roles/deploy/files
-                  # sudo npm i
-                  # npm audit fix
-                  # sudo apt install curl
-                  # cd backend
-                  # npm install
-                  # npm run build
       - run:
-          name: Package Backend
+          name: Deploy backend
           command: |
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-
-                  # cd backend
-                  # npm run build
-                  # tar -czf artifact.tar.gz dist/* package*
-                  # cd ..
-                  # cp backend/artifact.tar.gz  .circleci/ansible/roles/deploy/files
-      - run:
-          name: Deploy backend
-          command: |
-            export TYPEORM_MIGRATIONS_DIR=./migrations
-            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-            export TYPEORM_MIGRATIONS=./migrations/*.ts
-            cd .circleci/ansible
-            cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            
       - destroy-environment
       - revert-migrations  
 
